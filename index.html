@@ -297,6 +297,37 @@
                 alert('An error occurred while submitting your form.');
             }
         });
+
+        document.getElementById('signupForm').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const selectedDemos = Array.from(document.querySelectorAll('.demo-button.selected, .happy-button.selected')).map(btn => btn.dataset.demo);
+
+    if (selectedDemos.length === 0) {
+        alert('Por favor selecciona al menos un evento.');
+        return;
+    }
+
+    // Generar enlaces para cada evento seleccionado
+    selectedDemos.forEach((demo, index) => {
+        const title = encodeURIComponent(demo); // Título del evento
+        const details = encodeURIComponent(`Evento seleccionado por: ${name} (${email})`);
+        const location = encodeURIComponent('ISE 2025, Fira de Barcelona');
+        const start = new Date(2025, 0, 8, 15 + index, 0).toISOString().replace(/[-:.]/g, '').slice(0, -1) + 'Z'; // Cambia a tu lógica
+        const end = new Date(2025, 0, 8, 16 + index, 0).toISOString().replace(/[-:.]/g, '').slice(0, -1) + 'Z'; // Cambia a tu lógica
+
+        const calendarURL = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&dates=${start}/${end}&location=${location}`;
+
+        console.log(`Enlace para ${demo}: ${calendarURL}`);
+
+        // Puedes abrir el enlace automáticamente o mostrarlo al usuario
+        window.open(calendarURL, '_blank');
+    });
+});
+
     </script>
 </body>
 </html>
